@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from textblob import TextBlob
 from textblob.classifiers import NaiveBayesClassifier
 import nltk
+import uvicorn
 
 nltk.download('punkt')
 nltk.download('punkt_tab')
@@ -20,6 +21,12 @@ model = NaiveBayesClassifier(data)
 
 app = FastAPI()
 
+port = 8000
+
+
 @app.get("/classify")
 async def read_root(text: str):
     return { "class": model.classify(text) }
+
+if __name__ == "__main__":
+    uvicorn.run("text_classifier:app", host="0.0.0.0", port=port, reload=False)
